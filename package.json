@@ -1,12 +1,12 @@
 {
-  "name": "myreact",
+  "name": "toycra",
   "version": "1.0.0",
   "private": true,
-  "description": "myreact-app",
-  "main": "index.js",
+  "description": "toycra",
+  "homepage": "https://github.com/wood3n/toycra.git",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "start": "webpack-dev-server --env.NODE_ENV=development",
+    "build": "webpack --env.NODE_ENV=production"
   },
   "dependencies": {
     "react": "^16.13.1",
@@ -18,9 +18,21 @@
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
+    "@svgr/webpack": "^5.4.0",
     "babel-loader": "^8.1.0",
+    "babel-plugin-inline-react-svg": "^1.1.1",
+    "copy-webpack-plugin": "^6.0.4",
     "css-loader": "^4.2.1",
     "file-loader": "^6.0.0",
-    "style-loader": "^1.2.1"
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.11.0",
+    "mini-svg-data-uri": "^1.2.3",
+    "react-refresh": "^0.8.3",
+    "style-loader": "^1.2.1",
+    "svg-sprite-loader": "^5.0.0",
+    "url-loader": "^4.1.0",
+    "webpack-dev-server": "^3.11.0"
   }
 }
