@@ -1,18 +1,15 @@
 import React, { Component } from "react";
+import { Button1 } from "../Button/index.jsx";
 import styles from "./styles.css";
-import "../../assets/icons/view.svg";
-import "../../assets/icons/view_off.svg";
 
 export default class extends Component {
   render() {
     return (
-      <div>
-        <svg>
-          <use href="#view" />
-        </svg>
-        <svg>
-          <use href="#view_off" />
-        </svg>
+      <div className={styles.parentgrid}>
+        <div className={styles.childgrid}>1</div>
+        <div className={styles.childgrid}>1</div>
+        <div className={styles.childgrid}>1</div>
+        <Button1 />
       </div>
     );
   }
