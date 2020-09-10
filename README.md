@@ -53,3 +53,9 @@ module.exports = {
 - 探索 webpack 的 code splitting 功能，在打包的时候将`node_modules`第三方库和`runtime`代码抽成单独的 chunk
 - 探索 webpack 的 tree shaking 配置，指定`optimization.providedExports:true`，`optimization.usedExports:true`以及指定`package.json` 的 `sideEffects`属性
 - install `clean-webpack-plugin`，在打包的时候先清除`build`目录文件
+
+### 2020-09-10
+
+- 配置 webpack 的`resolve`规则去简化`import`的路径解析规则
+- install `pnp-webpack-plugin`，探索学习 Plug'n'Play 的设计思想
+- 探索学习 webpack 的`optimization`配置项

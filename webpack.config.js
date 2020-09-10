@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin"); //inline runtime chunk
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin"); //压缩JS代码
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const glob = require("glob");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin"); //压缩CSS代码
@@ -12,6 +13,7 @@ const SpeedMeasurePlugin = require("speed-measure-webpack-plugin"); //代码打�
 const smp = new SpeedMeasurePlugin();
 const { CleanWebpackPlugin } = require("clean-webpack-plugin"); //清理build文件夹
 const ManifestPlugin = require("webpack-manifest-plugin");
+const PnpWebpackPlugin = require("pnp-webpack-plugin");
 
 module.exports = function (env) {
   const isDevelopment = env.NODE_ENV === "development";
@@ -35,13 +37,39 @@ module.exports = function (env) {
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
-            name: "vendors",
+            name: "vendors_node",
             chunks: "all",
           },
         },
       },
+      minimize: isProduction,
+      minimizer: [
+        new TerserPlugin(),
+        new OptimizeCssAssetsPlugin({
+          //压缩CSS
+          assetNameRegExp: /\.css$/g,
+          cssProcessor: require("cssnano"),
+          cssProcessorPluginOptions: {
+            preset: ["default", { discardComments: { removeAll: true } }],
+          },
+          canPrint: true,
+        }),
+      ],
+      moduleIds: false,
     },
-    // devtool: isProduction ? "source-map" : false,
+    performance: false,
+    // devtool: isProduction ? "eval-cheap-module-source-map" : false,
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+      modules: [path.resolve(__dirname, "./src/components"), "node_modules"],
+      extensions: [".wasm", ".mjs", ".js", ".json", "jsx"],
+      plugins: [PnpWebpackPlugin],
+    },
+    resolveLoader: {
+      plugins: [PnpWebpackPlugin.moduleLoader(module)],
+    },
     module: {
       rules: [
         {
@@ -66,6 +94,7 @@ module.exports = function (env) {
               ].filter(Boolean),
             },
           },
+          resolve: { extensions: [".js", ".jsx"] }, //自动解析index.jsx文件，必须加上这一句，且".js"不能省略
         },
         {
           test: /\.css$/i,
@@ -175,16 +204,16 @@ module.exports = function (env) {
           generateStatsFile: true,
           statsFilename: "stats.json",
         }),
-      isProduction &&
-        new OptimizeCssAssetsPlugin({
-          //压缩CSS
-          assetNameRegExp: /\.css$/g,
-          cssProcessor: require("cssnano"),
-          cssProcessorPluginOptions: {
-            preset: ["default", { discardComments: { removeAll: true } }],
-          },
-          canPrint: true,
-        }),
+      // isProduction &&
+      //   new OptimizeCssAssetsPlugin({
+      //     //压缩CSS
+      //     assetNameRegExp: /\.css$/g,
+      //     cssProcessor: require("cssnano"),
+      //     cssProcessorPluginOptions: {
+      //       preset: ["default", { discardComments: { removeAll: true } }],
+      //     },
+      //     canPrint: true,
+      //   }),
       isProduction && new CleanWebpackPlugin(),
       isProduction && new ManifestPlugin(),
     ].filter(Boolean),

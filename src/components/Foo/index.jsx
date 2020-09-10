@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button1 } from "../Button/index.jsx";
+import { Button1 } from "Button";
 import styles from "./styles.css";
 
 export default class extends Component {
