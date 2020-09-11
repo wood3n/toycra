@@ -10,6 +10,7 @@
     "analyze": "webpack-bundle-analyzer --port 8888 ./build/stats.json"
   },
   "dependencies": {
+    "@babel/runtime": "^7.11.2",
     "glob": "^7.1.6",
     "glob-all": "^3.2.1",
     "lodash": "^4.17.20",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
     "@fullhuman/postcss-purgecss": "^2.3.0",

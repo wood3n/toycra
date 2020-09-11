@@ -23,8 +23,11 @@ module.exports = function (env) {
     entry: "./src/index.js",
     output: {
       filename: isProduction
-        ? "static/js/[name].[contenthash].js"
+        ? "static/js/[name].[contenthash:8].js"
         : "static/js/bundle.js",
+      chunkFilename: isProduction
+        ? "static/js/[name].[contenthash:8].chunk.js"
+        : "static/js/[name].chunk.js",
       path: path.resolve(__dirname, "build"),
       pathinfo: false,
     },
@@ -37,7 +40,7 @@ module.exports = function (env) {
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
-            name: "vendors_node",
+            name: "vendors",
             chunks: "all",
           },
         },
@@ -57,7 +60,6 @@ module.exports = function (env) {
       ],
       moduleIds: false,
     },
-    performance: false,
     // devtool: isProduction ? "eval-cheap-module-source-map" : false,
     resolve: {
       alias: {
@@ -75,24 +77,23 @@ module.exports = function (env) {
         {
           test: /\.m?jsx?$/,
           exclude: /(node_modules)/,
-          use: {
-            loader: "babel-loader",
-            options: {
-              presets: [
-                [
-                  "@babel/preset-env",
-                  {
-                    modules: false,
-                  },
-                ],
-                ["@babel/preset-react"],
+          loader: "babel-loader",
+          options: {
+            presets: [
+              [
+                "@babel/preset-env",
+                {
+                  modules: false,
+                },
               ],
-              plugins: [
-                "@babel/plugin-proposal-class-properties",
-                isDevelopment && require.resolve("react-refresh/babel"),
-                // "inline-react-svg",
-              ].filter(Boolean),
-            },
+              ["@babel/preset-react"],
+            ],
+            plugins: [
+              "@babel/plugin-transform-runtime",
+              "@babel/plugin-proposal-class-properties",
+              isDevelopment && require.resolve("react-refresh/babel"),
+            ].filter(Boolean),
+            cacheDirectory: true,
           },
           resolve: { extensions: [".js", ".jsx"] }, //自动解析index.jsx文件，必须加上这一句，且".js"不能省略
         },
@@ -184,19 +185,19 @@ module.exports = function (env) {
       ],
     },
     plugins: [
+      isDevelopment && new ReactRefreshWebpackPlugin(),
       new HtmlWebpackPlugin({
         inject: true,
         template: "./public/index.html",
         favicon: "./public/favicon.ico",
       }),
-      isProduction &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
-      isDevelopment && new ReactRefreshWebpackPlugin(),
+      isProduction && new CleanWebpackPlugin(),
+      isProduction && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime/]),
       isProduction &&
         new MiniCssExtractPlugin({
-          filename: "static/css/[name].[contenthash].css",
+          filename: "static/css/[name].[contenthash:8].css",
+          chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
         }),
-      ,
       isProduction &&
         new BundleAnalyzerPlugin({
           //打包分析
@@ -204,17 +205,6 @@ module.exports = function (env) {
           generateStatsFile: true,
           statsFilename: "stats.json",
         }),
-      // isProduction &&
-      //   new OptimizeCssAssetsPlugin({
-      //     //压缩CSS
-      //     assetNameRegExp: /\.css$/g,
-      //     cssProcessor: require("cssnano"),
-      //     cssProcessorPluginOptions: {
-      //       preset: ["default", { discardComments: { removeAll: true } }],
-      //     },
-      //     canPrint: true,
-      //   }),
-      isProduction && new CleanWebpackPlugin(),
       isProduction && new ManifestPlugin(),
     ].filter(Boolean),
     devServer: {
@@ -225,6 +215,7 @@ module.exports = function (env) {
       hot: true,
       // contentBase: "public",
     },
+    performance: false,
   };
 
   return isProduction ? smp.wrap(webpackConfig) : webpackConfig;

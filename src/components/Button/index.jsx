@@ -1,16 +1,24 @@
 import React, { Component } from "react";
-import style from "./styles.css";
 
 export class Button1 extends Component {
+  state = {
+    value: 0,
+  };
+
   handleClick = () => {
-    throw new Error();
+    import(/* webpackChunkName: "math" */ "./math").then(({ add }) => {
+      this.setState({
+        value: add(1, 2),
+      });
+    });
   };
 
   render() {
     return (
-      <button className={style.btn2} onClick={this.handleClick}>
-        测试1
-      </button>
+      <>
+        <button onClick={this.handleClick}>计算工资</button>
+        <p>{this.state.value}</p>
+      </>
     );
   }
 }

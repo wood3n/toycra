@@ -59,3 +59,29 @@ module.exports = {
 - 配置 webpack 的`resolve`规则去简化`import`的路径解析规则
 - install `pnp-webpack-plugin`，探索学习 Plug'n'Play 的设计思想
 - 探索学习 webpack 的`optimization`配置项
+
+### 2020-09-11
+
+- 修改 webpack 抽取 chunk 的文件名配置，也就是指定`output.chunkFilename`和`mini-css-extract-plugin`的`chunkFilename`
+
+```javascript
+module.exports = {
+  entry: {
+    home: "./src/index.js",
+    other: "./src/test.js",
+  },
+  output: {
+    chunkFilename: isProduction
+      ? "static/js/[name].[contenthash:8].chunk.js"
+      : "static/js/[name].chunk.js",
+  },
+  plugins: [
+    isProduction &&
+      new MiniCssExtractPlugin({
+        chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
+      }),
+  ],
+};
+```
+
+- 优化`babel-loader`配置，引入 `cacheDirectory:true`，引入 `@babel/plugin-transform-runtime` plugin
