@@ -65,9 +65,13 @@ module.exports = function (env) {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
-      modules: [path.resolve(__dirname, "./src/components"), "node_modules"],
+      modules: [
+        path.resolve(__dirname, "./src/components"),
+        path.resolve("./node_modules"),
+      ],
       extensions: [".wasm", ".mjs", ".js", ".json", "jsx"],
       plugins: [PnpWebpackPlugin],
+      symlinks: false,
     },
     resolveLoader: {
       plugins: [PnpWebpackPlugin.moduleLoader(module)],
@@ -160,6 +164,7 @@ module.exports = function (env) {
                 name: "static/images/[name].[contenthash:8].[ext]",
               },
             },
+            "cache-loader",
             {
               loader: "image-webpack-loader",
               options: {
@@ -201,6 +206,7 @@ module.exports = function (env) {
       isProduction &&
         new BundleAnalyzerPlugin({
           //打包分析
+          analyzerMode: "disabled",
           openAnalyzer: false,
           generateStatsFile: true,
           statsFilename: "stats.json",
