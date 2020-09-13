@@ -1,12 +1,14 @@
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackTagsPlugin = require("html-webpack-tags-plugin");
 const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin"); //inline runtime chunk
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin"); //压缩JS代码
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const glob = require("glob");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin"); //压缩CSS代码
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin; //分析代码打包
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin"); //代码打包速度分析工具
@@ -36,15 +38,15 @@ module.exports = function (env) {
       usedExports: isProduction,
       sideEffects: isProduction,
       runtimeChunk: "single",
-      splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: "vendors",
-            chunks: "all",
-          },
-        },
-      },
+      // splitChunks: {
+      //   cacheGroups: {
+      //     vendor: {
+      //       test: /[\\/]node_modules[\\/]/,
+      //       name: "vendors",
+      //       chunks: "all",
+      //     },
+      //   },
+      // },
       minimize: isProduction,
       minimizer: [
         new TerserPlugin(),
@@ -191,10 +193,24 @@ module.exports = function (env) {
     },
     plugins: [
       isDevelopment && new ReactRefreshWebpackPlugin(),
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: "./dll/react.dffd2b4e9672e773b9c9.dll.js", to: "static/js" },
+        ],
+      }),
       new HtmlWebpackPlugin({
         inject: true,
         template: "./public/index.html",
         favicon: "./public/favicon.ico",
+      }),
+      new HtmlWebpackTagsPlugin({
+        publicPath: "static/js",
+        tags: ["react.dffd2b4e9672e773b9c9.dll.js"],
+        append: true,
+      }),
+      new webpack.DllReferencePlugin({
+        context: path.resolve(__dirname, "./dll"),
+        manifest: require("./dll/react-manifest.json"),
       }),
       isProduction && new CleanWebpackPlugin(),
       isProduction && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime/]),

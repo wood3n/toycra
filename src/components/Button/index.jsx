@@ -16,7 +16,7 @@ export class Button1 extends Component {
   render() {
     return (
       <>
-        <button onClick={this.handleClick}>计算工资</button>
+        <button onClick={this.handleClick}>计算我的工资：</button>
         <p>{this.state.value}</p>
       </>
     );

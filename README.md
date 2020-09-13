@@ -90,3 +90,7 @@ module.exports = {
 
 - 修改 `webpack-bundle-analyzer`的配置项 `analyzerMode: "disabled"`，这样在打包完成以后就可以自动结束终端运行了
 - install `cache-loader`，测试在一些耗时长的 loader 使用时的缓存效果，尤其是像压缩图片的 `image-webpack-loader`这样的 loader 前使用
+
+### 2020-09-13
+
+- 使用 `DllPlugin` 打包第三方库，目前尚未解决和 `SplitChunksPlugin`的冲突问题

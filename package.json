@@ -7,6 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server --env.NODE_ENV=development",
     "build": "webpack --env.NODE_ENV=production",
+    "dll": "webpack --config webpack.dll.config.js",
     "analyze": "webpack-bundle-analyzer --port 8888 ./build/stats.json"
   },
   "dependencies": {
@@ -38,6 +39,7 @@
     "html-loader": "^1.1.0",
     "html-webpack-inline-source-plugin": "1.0.0-beta.2",
     "html-webpack-plugin": "^4.3.0",
+    "html-webpack-tags-plugin": "^2.0.17",
     "image-webpack-loader": "^6.0.0",
     "mini-css-extract-plugin": "^0.11.0",
     "mini-svg-data-uri": "^1.2.3",
