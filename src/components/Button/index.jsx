@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import View from "@/assets/icons/view.svg";
 
-export class Button1 extends Component {
+export default class extends Component {
   state = {
     value: 0,
   };
@@ -16,6 +17,7 @@ export class Button1 extends Component {
   render() {
     return (
       <>
+        <View />
         <button onClick={this.handleClick}>计算我的工资：</button>
         <p>{this.state.value}</p>
       </>

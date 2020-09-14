@@ -7,6 +7,7 @@
 - [webpack](https://github.com/webpack/webpack)，[webpack-cli](https://github.com/webpack/webpack-cli)
 - [@babel/core](https://babeljs.io/docs/en/core-packages)，[@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env)，[@babel/preset-react](https://babeljs.io/docs/en/babel-preset-react)，[babel-loader](https://webpack.js.org/loaders/babel-loader/)
 - [pnp-webpack-plugin](https://github.com/arcanis/pnp-webpack-plugin)
+- [react-refresh](https://www.npmjs.com/package/react-refresh)
 - [React Refresh Webpack Plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin/#react-refresh-webpack-plugin)
 - [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin)
 - [style-loader](https://github.com/webpack-contrib/style-loader)，[css-loader](https://github.com/webpack-contrib/css-loader)，[postcss-loader](https://github.com/webpack-contrib/postcss-loader)
@@ -15,6 +16,7 @@
 - [glob](https://github.com/isaacs/node-glob#readme)
 - [optimize-css-assets-webpack-plugin](https://github.com/NMFR/optimize-css-assets-webpack-plugin)
 - [url-loader](https://github.com/webpack-contrib/url-loader#options)
+- [@svgr/webpack](https://github.com/gregberge/svgr/tree/master/packages/webpack)
 - [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader#image-webpack-loader)
 - [react-dev-utils](https://github.com/facebook/create-react-app/tree/master/packages/react-dev-utils)
 - [clean-webpack-plugin](https://github.com/johnagan/clean-webpack-plugin)
@@ -22,6 +24,7 @@
 - [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer)
 - [speed-measure-webpack-plugin](https://github.com/stephencookdev/speed-measure-webpack-plugin)
 - [SplitChunksPlugin](https://webpack.docschina.org/plugins/split-chunks-plugin/)
+- [webpackbar](https://github.com/nuxt/webpackbar)
 
 ### library
 
@@ -135,3 +138,5 @@ module.exports = {
 ### 2020-09-14
 
 - 探索使用 `externals` + CDN 的方式引入第三方库，替代`DllPlugin`的方案
+- `babel-plugin-inline-react-svg`无法解析 alias 的 SVG 路径，替换为`@svgr/webpack`
+- 引入 webpackbar

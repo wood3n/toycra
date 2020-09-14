@@ -10,6 +10,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin; //分析代码打包
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin"); //代码打包速度分析工具
 const smp = new SpeedMeasurePlugin();
+const WebpackBar = require("webpackbar"); //打包进度条
 const { CleanWebpackPlugin } = require("clean-webpack-plugin"); //清理build文件夹
 const ManifestPlugin = require("webpack-manifest-plugin");
 const PnpWebpackPlugin = require("pnp-webpack-plugin");
@@ -65,12 +66,8 @@ module.exports = function (env) {
     },
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
+        "@": path.resolve(__dirname, "src"),
       },
-      modules: [
-        path.resolve(__dirname, "./src/components"),
-        path.resolve("./node_modules"),
-      ],
       extensions: [".wasm", ".mjs", ".js", ".json", "jsx"],
       plugins: [PnpWebpackPlugin],
       symlinks: false,
@@ -97,11 +94,17 @@ module.exports = function (env) {
             plugins: [
               "@babel/plugin-transform-runtime",
               "@babel/plugin-proposal-class-properties",
+              // "inline-react-svg",
               isDevelopment && require.resolve("react-refresh/babel"),
             ].filter(Boolean),
             cacheDirectory: true,
           },
-          resolve: { extensions: [".js", ".jsx"] }, //自动解析index.jsx文件，必须加上这一句，且".js"不能省略
+          resolve: {
+            alias: {
+              "@": path.resolve(__dirname, "src"),
+            },
+            extensions: [".js", ".jsx"],
+          }, //自动解析index.jsx文件，必须加上这一句，且".js"不能省略
         },
         {
           test: /\.css$/i,
@@ -156,7 +159,7 @@ module.exports = function (env) {
           ].filter(Boolean),
         },
         {
-          test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/i],
+          test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/],
           include: path.resolve(__dirname, "src/assets/images"),
           use: [
             {
@@ -176,9 +179,8 @@ module.exports = function (env) {
           ],
         },
         {
-          test: /\.svg$/i,
-          include: path.resolve(__dirname, "src/assets/icons"),
-          loader: "svg-sprite-loader",
+          test: /\.svg$/,
+          loader: "@svgr/webpack",
         },
         {
           test: [/\.ttf/i, /\.woff/i, /\.woff2/i, /\.eot/i, /\.otf/i],
@@ -193,6 +195,7 @@ module.exports = function (env) {
     },
     plugins: [
       isDevelopment && new ReactRefreshWebpackPlugin(),
+      new WebpackBar(),
       new HtmlWebpackPlugin({
         inject: true,
         template: "./public/index.html",
@@ -232,6 +235,7 @@ module.exports = function (env) {
       writeToDisk: false,
       hot: true,
     },
+    stats: "errors-only",
   };
 
   return isProduction ? smp.wrap(webpackConfig) : webpackConfig;
