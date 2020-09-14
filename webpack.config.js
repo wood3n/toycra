@@ -1,14 +1,11 @@
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const HtmlWebpackTagsPlugin = require("html-webpack-tags-plugin");
 const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin"); //inline runtime chunk
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin"); //压缩JS代码
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const glob = require("glob");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin"); //压缩CSS代码
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin; //分析代码打包
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin"); //代码打包速度分析工具
@@ -38,15 +35,15 @@ module.exports = function (env) {
       usedExports: isProduction,
       sideEffects: isProduction,
       runtimeChunk: "single",
-      // splitChunks: {
-      //   cacheGroups: {
-      //     vendor: {
-      //       test: /[\\/]node_modules[\\/]/,
-      //       name: "vendors",
-      //       chunks: "all",
-      //     },
-      //   },
-      // },
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendors",
+            chunks: "all",
+          },
+        },
+      },
       minimize: isProduction,
       minimizer: [
         new TerserPlugin(),
@@ -62,7 +59,10 @@ module.exports = function (env) {
       ],
       moduleIds: false,
     },
-    // devtool: isProduction ? "eval-cheap-module-source-map" : false,
+    externals: {
+      react: "React",
+      "react-dom": "ReactDOM",
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
@@ -193,27 +193,23 @@ module.exports = function (env) {
     },
     plugins: [
       isDevelopment && new ReactRefreshWebpackPlugin(),
-      new CopyWebpackPlugin({
-        patterns: [
-          { from: "./dll/react.dffd2b4e9672e773b9c9.dll.js", to: "static/js" },
-        ],
-      }),
       new HtmlWebpackPlugin({
         inject: true,
         template: "./public/index.html",
         favicon: "./public/favicon.ico",
+        cdn: {
+          script: [
+            isDevelopment
+              ? "https://cdn.jsdelivr.net/npm/react@16.12.0/umd/react.development.js"
+              : "https://cdn.jsdelivr.net/npm/react@16.12.0/umd/react.production.min.js",
+            isDevelopment
+              ? "https://cdn.jsdelivr.net/npm/react-dom@16.12.0/umd/react-dom.development.js"
+              : "https://cdn.jsdelivr.net/npm/react-dom@16.12.0/umd/react-dom.production.min.js",
+          ],
+        },
       }),
-      new HtmlWebpackTagsPlugin({
-        publicPath: "static/js",
-        tags: ["react.dffd2b4e9672e773b9c9.dll.js"],
-        append: true,
-      }),
-      new webpack.DllReferencePlugin({
-        context: path.resolve(__dirname, "./dll"),
-        manifest: require("./dll/react-manifest.json"),
-      }),
-      isProduction && new CleanWebpackPlugin(),
       isProduction && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime/]),
+      isProduction && new CleanWebpackPlugin(),
       isProduction &&
         new MiniCssExtractPlugin({
           filename: "static/css/[name].[contenthash:8].css",
@@ -235,9 +231,7 @@ module.exports = function (env) {
       compress: true,
       writeToDisk: false,
       hot: true,
-      // contentBase: "public",
     },
-    performance: false,
   };
 
   return isProduction ? smp.wrap(webpackConfig) : webpackConfig;
