@@ -5,7 +5,7 @@
   "description": "toycra",
   "homepage": "https://github.com/wood3n/toycra.git",
   "scripts": {
-    "start": "webpack-dev-server --env.NODE_ENV=development",
+    "start": "webpack-dev-server --info=false --env.NODE_ENV=development",
     "build": "webpack --env.NODE_ENV=production",
     "dll": "webpack --config webpack.dll.config.js",
     "analyze": "webpack-bundle-analyzer --port 8888 ./build/stats.json"

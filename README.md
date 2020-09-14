@@ -139,4 +139,4 @@ module.exports = {
 
 - 探索使用 `externals` + CDN 的方式引入第三方库，替代`DllPlugin`的方案
 - `babel-plugin-inline-react-svg`无法解析 alias 的 SVG 路径，替换为`@svgr/webpack`
-- 引入 webpackbar
+- 引入 webpackbar，简化 webpack 构建时的 CLI 信息

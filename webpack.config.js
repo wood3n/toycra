@@ -234,6 +234,7 @@ module.exports = function (env) {
       compress: true,
       writeToDisk: false,
       hot: true,
+      stats: "errors-only",
     },
     stats: "errors-only",
   };

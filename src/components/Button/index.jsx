@@ -17,7 +17,7 @@ export default class extends Component {
   render() {
     return (
       <>
-        <View />
+        {/* <View /> */}
         <button onClick={this.handleClick}>计算我的工资：</button>
         <p>{this.state.value}</p>
       </>
