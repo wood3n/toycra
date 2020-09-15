@@ -16,6 +16,9 @@
 - [glob](https://github.com/isaacs/node-glob#readme)
 - [optimize-css-assets-webpack-plugin](https://github.com/NMFR/optimize-css-assets-webpack-plugin)
 - [url-loader](https://github.com/webpack-contrib/url-loader#options)
+- [SplitChunksPlugin](https://webpack.docschina.org/plugins/split-chunks-plugin/)
+- [babel-plugin-inline-react-svg](https://github.com/airbnb/babel-plugin-inline-react-svg)
+- [babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver)
 - [@svgr/webpack](https://github.com/gregberge/svgr/tree/master/packages/webpack)
 - [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader#image-webpack-loader)
 - [react-dev-utils](https://github.com/facebook/create-react-app/tree/master/packages/react-dev-utils)
@@ -23,7 +26,6 @@
 - [webpack-manifest-plugin](https://github.com/danethurber/webpack-manifest-plugin)
 - [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer)
 - [speed-measure-webpack-plugin](https://github.com/stephencookdev/speed-measure-webpack-plugin)
-- [SplitChunksPlugin](https://webpack.docschina.org/plugins/split-chunks-plugin/)
 - [webpackbar](https://github.com/nuxt/webpackbar)
 
 ### library
@@ -128,6 +130,8 @@ module.exports = {
 
 ### 2020-09-12
 
+- install `webpack-bundle-analyzer`，引入 `yarn build`以后，打包结果的分析命令 `yarn analyze`
+- install `speed-measure-webpack-plugin`，终端输出打包过程的耗时信息
 - 修改 `webpack-bundle-analyzer`的配置项 `analyzerMode: "disabled"`，这样在打包完成以后就可以自动结束终端运行了
 - install `cache-loader`，测试在一些耗时长的 loader 使用时的缓存效果，例如像压缩图片的 `image-webpack-loader`这样的 loader 前使用
 
@@ -140,3 +144,8 @@ module.exports = {
 - 探索使用 `externals` + CDN 的方式引入第三方库，替代`DllPlugin`的方案
 - `babel-plugin-inline-react-svg`无法解析 alias 的 SVG 路径，替换为`@svgr/webpack`
 - 引入 webpackbar，简化 webpack 构建时的 CLI 信息
+
+### 2020-09-15
+
+- 修改 HTML 模板页，引入 React CDN 链接
+- install `babel-plugin-module-resolver`，解决 `babel-plugin-inline-react-svg`无法识别 SVG 通过 `resolve.alias`引入的路径问题

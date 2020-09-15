@@ -68,6 +68,11 @@ module.exports = function (env) {
       alias: {
         "@": path.resolve(__dirname, "src"),
       },
+      modules: [
+        path.resolve(__dirname, "./src/components"),
+        path.resolve(__dirname, "./src"),
+        path.resolve(__dirname, "node_modules"),
+      ],
       extensions: [".wasm", ".mjs", ".js", ".json", "jsx"],
       plugins: [PnpWebpackPlugin],
       symlinks: false,
@@ -94,8 +99,16 @@ module.exports = function (env) {
             plugins: [
               "@babel/plugin-transform-runtime",
               "@babel/plugin-proposal-class-properties",
-              // "inline-react-svg",
+              "inline-react-svg",
               isDevelopment && require.resolve("react-refresh/babel"),
+              [
+                "module-resolver",
+                {
+                  alias: {
+                    "@": "./src",
+                  },
+                },
+              ],
             ].filter(Boolean),
             cacheDirectory: true,
           },
@@ -177,10 +190,6 @@ module.exports = function (env) {
               },
             },
           ],
-        },
-        {
-          test: /\.svg$/,
-          loader: "@svgr/webpack",
         },
         {
           test: [/\.ttf/i, /\.woff/i, /\.woff2/i, /\.eot/i, /\.otf/i],
