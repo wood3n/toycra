@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import Button from "../Button";
-import "./styles.css";
+import "./style.module.css";
 
 export default class extends Component {
-  render() {
-    return <Button />;
-  }
+	render() {
+		return <Button />;
+	}
 }
