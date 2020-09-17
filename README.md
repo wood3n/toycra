@@ -51,33 +51,6 @@
 -   install `webpack`和`webpack-cli`
 -   install `babel-loader`,`@babel/core`, `@babel/preset-env`和`@babel/preset-react`
 -   配置 webpack 支持使用 React JSX 编写组件
-
-```javascript
-const path = require("path");
-
-module.exports = {
-	entry: "./src/index.js",
-	output: {
-		filename: "main.js",
-		path: path.resolve(__dirname, "dist"),
-	},
-	module: {
-		rules: [
-			{
-				test: /\.m?jsx?$/,
-				exclude: /(node_modules)/,
-				use: {
-					loader: "babel-loader",
-					options: {
-						presets: ["@babel/preset-env", "@babel/preset-react"],
-					},
-				},
-			},
-		],
-	},
-};
-```
-
 -   配置 npm-scripts 执行`yarn build`命令打包
 
 ### 2020-08-31
@@ -109,27 +82,6 @@ module.exports = {
 ### 2020-09-11
 
 -   修改 webpack 抽取 chunk 的文件名配置，也就是指定`output.chunkFilename`和`mini-css-extract-plugin`的`chunkFilename`
-
-```javascript
-module.exports = {
-	entry: {
-		home: "./src/index.js",
-		other: "./src/test.js",
-	},
-	output: {
-		chunkFilename: isProduction
-			? "static/js/[name].[contenthash:8].chunk.js"
-			: "static/js/[name].chunk.js",
-	},
-	plugins: [
-		isProduction &&
-			new MiniCssExtractPlugin({
-				chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
-			}),
-	],
-};
-```
-
 -   优化`babel-loader`配置，引入 `cacheDirectory:true`，引入 `@babel/plugin-transform-runtime` plugin
 
 ### 2020-09-12
@@ -157,3 +109,4 @@ module.exports = {
 ### 2020-09-17
 
 -   探索 `core-js` polyfill 库，深入 `@babel/plugin-transform-runtime`配置，并引入 `@babel/runtime-corejs3`和 `core-js-pure@3.6.5`库
+-   优化`"@babel/preset-env"`配置
