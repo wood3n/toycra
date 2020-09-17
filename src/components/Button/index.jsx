@@ -22,7 +22,7 @@ export default class extends Component {
 				<button styleName="btn-login" onClick={this.handleClick}>
 					计算我的工资：
 				</button>
-				<p styleName="p">{this.state.value}</p>
+				<p>{this.state.value}</p>
 			</>
 		);
 	}

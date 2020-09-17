@@ -88,7 +88,6 @@ module.exports = function (env) {
 							[
 								"@babel/preset-env",
 								{
-									debug: true,
 									targets: isDevelopment
 										? "last 1 chrome version"
 										: "> 1%, last 2 versions, Firefox ESR, ie >= 11, not dead",
@@ -96,7 +95,13 @@ module.exports = function (env) {
 									modules: false,
 								},
 							],
-							["@babel/preset-react"],
+							[
+								"@babel/preset-react",
+								{
+									development: isDevelopment,
+									useBuiltIns: true,
+								},
+							],
 						],
 						plugins: [
 							[
