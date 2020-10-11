@@ -20,7 +20,7 @@ module.exports = function (env) {
   const isProduction = env.NODE_ENV === "production";
   const webpackConfig = {
     mode: isProduction ? "production" : isDevelopment && "development",
-    entry: "./src/index.js",
+    entry: "./src",
     output: {
       filename: isProduction
         ? "static/js/[name].[contenthash:8].js"
@@ -35,7 +35,9 @@ module.exports = function (env) {
       providedExports: isProduction,
       usedExports: isProduction,
       sideEffects: isProduction,
-      runtimeChunk: "single",
+      runtimeChunk: {
+        name: (entrypoint) => `runtime-${entrypoint.name}`,
+      },
       splitChunks: {
         cacheGroups: {
           vendor: {
@@ -73,7 +75,7 @@ module.exports = function (env) {
         path.resolve(__dirname, "./src"),
         path.resolve(__dirname, "node_modules"),
       ],
-      extensions: [".wasm", ".mjs", ".js", ".json", "jsx"],
+      extensions: [".wasm", ".mjs", ".js", ".json", ".jsx", ".ts", ".tsx"],
       plugins: [PnpWebpackPlugin],
       symlinks: false,
     },
@@ -83,7 +85,7 @@ module.exports = function (env) {
     module: {
       rules: [
         {
-          test: /\.m?jsx?$/,
+          test: /\.(js|jsx|tsx|ts)?$/,
           exclude: /(node_modules)/,
           loader: "babel-loader",
           options: {
@@ -95,6 +97,7 @@ module.exports = function (env) {
                 },
               ],
               ["@babel/preset-react"],
+              ["@babel/preset-typescript"],
             ],
             plugins: [
               "@babel/plugin-transform-runtime",
@@ -109,6 +112,7 @@ module.exports = function (env) {
                   },
                 },
               ],
+              ["import", { libraryName: "antd", style: true }],
             ].filter(Boolean),
             cacheDirectory: true,
           },
@@ -116,11 +120,12 @@ module.exports = function (env) {
             alias: {
               "@": path.resolve(__dirname, "src"),
             },
-            extensions: [".js", ".jsx"],
+            extensions: [".js", ".jsx", ".ts", ".tsx"],
           }, //自动解析index.jsx文件，必须加上这一句，且".js"不能省略
         },
         {
-          test: /\.css$/i,
+          test: /\.css$/,
+          exclude: /node_modules/,
           use: [
             isDevelopment && {
               loader: "style-loader",
@@ -166,6 +171,94 @@ module.exports = function (env) {
                       },
                     ],
                   ],
+                },
+              },
+            },
+          ].filter(Boolean),
+        },
+        {
+          test: /\.less$/,
+          exclude: /node_modules/,
+          use: [
+            isDevelopment && {
+              loader: "style-loader",
+            },
+            isProduction && {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                esModule: true,
+                publicPath: "../../",
+              },
+            },
+            {
+              loader: "css-loader",
+              options: {
+                esModule: true,
+                modules: {
+                  localIdentName: isDevelopment
+                    ? "[path][name]__[local]"
+                    : "[hash:base64]",
+                },
+              },
+            },
+            {
+              loader: "postcss-loader",
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    "postcss-flexbugs-fixes",
+                    "autoprefixer",
+                    "postcss-preset-env",
+                    [
+                      "@fullhuman/postcss-purgecss",
+                      {
+                        content: [
+                          path.join(__dirname, "./public/index.html"),
+                          ...glob.sync(
+                            `${path.join(__dirname, "src")}/**/*.jsx`,
+                            {
+                              nodir: true,
+                            }
+                          ),
+                        ],
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+            {
+              loader: "less-loader", // compiles Less to CSS
+              options: {
+                lessOptions: {
+                  paths: [path.resolve(__dirname, "src")],
+                },
+              },
+            },
+          ].filter(Boolean),
+        },
+        {
+          test: /\.less$/,
+          include: /node_modules/,
+          use: [
+            isDevelopment && {
+              loader: "style-loader",
+            },
+            isProduction && {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                esModule: true,
+                publicPath: "../../",
+              },
+            },
+            {
+              loader: "css-loader",
+            },
+            {
+              loader: "less-loader", // compiles Less to CSS
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true,
                 },
               },
             },
@@ -220,7 +313,8 @@ module.exports = function (env) {
           ],
         },
       }),
-      isProduction && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime/]),
+      isProduction &&
+        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       isProduction && new CleanWebpackPlugin(),
       isProduction &&
         new MiniCssExtractPlugin({
