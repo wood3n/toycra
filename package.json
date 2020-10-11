@@ -71,5 +71,18 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "^2.2.0",
     "webpackbar": "^4.0.0"
+  },
+  "browserslist": {
+    "production": [
+      "last 2 versions",
+      "Firefox ESR",
+      "> 1%",
+      "ie >= 11"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
