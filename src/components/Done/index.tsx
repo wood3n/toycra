@@ -11,6 +11,7 @@ interface Props {
 const { Text } = Typography;
 const { Panel } = Collapse;
 const DoneList: React.FC<Props> = ({ listData, deleteDoneTodo }) => {
+  console.log("done更新");
   return (
     <Collapse>
       <Panel

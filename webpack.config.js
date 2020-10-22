@@ -6,7 +6,8 @@ const TerserPlugin = require("terser-webpack-plugin"); //压缩JS代码
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const glob = require("glob");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin"); //压缩CSS代码
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin; //分析代码打包
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin; //分析代码打包
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin"); //代码打包速度分析工具
 const smp = new SpeedMeasurePlugin();
 const WebpackBar = require("webpackbar"); //打包进度条
@@ -30,6 +31,7 @@ module.exports = function (env) {
       path: path.resolve(__dirname, "build"),
       pathinfo: false,
     },
+    devtool: "source-map",
     optimization: {
       providedExports: isProduction,
       usedExports: isProduction,
@@ -48,7 +50,9 @@ module.exports = function (env) {
       },
       minimize: isProduction,
       minimizer: [
-        new TerserPlugin(),
+        new TerserPlugin({
+          sourceMap: true,
+        }),
         new OptimizeCssAssetsPlugin({
           //压缩CSS
           assetNameRegExp: /\.css$/g,
@@ -341,5 +345,5 @@ module.exports = function (env) {
     stats: "errors-only",
   };
 
-	return isProduction ? smp.wrap(webpackConfig) : webpackConfig;
+  return isProduction ? smp.wrap(webpackConfig) : webpackConfig;
 };
